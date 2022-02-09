@@ -1,5 +1,3 @@
-# CSI2132_Project
-
 # Database project for dentist office 
 
 Amani Farid
