@@ -1,7 +1,3 @@
--- Database: Clinic
-
--- DROP DATABASE IF EXISTS "Clinic";
-
 CREATE DATABASE "Clinic"
     WITH 
     OWNER = postgres
