@@ -1,3 +1,33 @@
+-- Table: public.Branch
+
+-- DROP TABLE IF EXISTS public."Branch";
+
+CREATE TABLE IF NOT EXISTS public."Branch"
+(
+    "Phone_no" numeric NOT NULL,
+    "Build_no" numeric NOT NULL,
+    "Street" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    "Province" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    "Country" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    "Postal_code" character varying COLLATE pg_catalog."default" NOT NULL,
+    "EID" integer NOT NULL,
+    "City" integer NOT NULL,
+    CONSTRAINT "Branch_pkey" PRIMARY KEY ("City"),
+    CONSTRAINT "Branch_EID_fkey" FOREIGN KEY ("EID")
+        REFERENCES public."Employee" ("EID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Branch"
+    OWNER to postgres;
+
+-- Table: public.Employee
+
+-- DROP TABLE IF EXISTS public."Employee";
+
 CREATE TABLE IF NOT EXISTS public."Employee"
 (
     "EID" integer NOT NULL,
@@ -8,39 +38,18 @@ CREATE TABLE IF NOT EXISTS public."Employee"
     "Salary" numeric NOT NULL,
     "Title" character varying(25) COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT "Employee_pkey" PRIMARY KEY ("EID")
-)
+)INHERITS (Users)
 
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."Employee"
     OWNER to postgres;
 
+-- Table: public.Users
 
-CREATE TABLE IF NOT EXISTS public."Branch"
-(
-    "Phone_no" numeric NOT NULL,
-    "Build_no" numeric NOT NULL,
-    "Street" character varying(25) COLLATE pg_catalog."default" NOT NULL,
-    "Province" character varying(25) COLLATE pg_catalog."default" NOT NULL,
-    "Country" character varying(25) COLLATE pg_catalog."default" NOT NULL,
-    "Postal_code" character varying COLLATE pg_catalog."default" NOT NULL,
-    "EID" BIGINT NOT NULL,
-    "City" integer NOT NULL,
-    CONSTRAINT "Branch_pkey" PRIMARY KEY ("City"),
-    CONSTRAINT "Branch_EID_fkey" FOREIGN KEY ("EID")
-        REFERENCES public."Employee" ("EID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-    
-)
+-- DROP TABLE IF EXISTS public."Users";
 
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Branch"
-    OWNER to postgres;
-
-
-CREATE TABLE IF NOT EXISTS public."User"
+CREATE TABLE IF NOT EXISTS public."Users"
 (
     "UserID" integer NOT NULL,
     "Email" character varying(25) COLLATE pg_catalog."default" NOT NULL,
@@ -53,5 +62,5 @@ CREATE TABLE IF NOT EXISTS public."User"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."User"
+ALTER TABLE IF EXISTS public."Users"
     OWNER to postgres;
