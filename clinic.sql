@@ -15,7 +15,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public."Employee"
     OWNER to postgres;
 
--- DROP TABLE IF EXISTS public."Branch";
 
 CREATE TABLE IF NOT EXISTS public."Branch"
 (
@@ -40,13 +39,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public."Branch"
     OWNER to postgres;
 
-    -- Table: public.Employee
-
--- DROP TABLE IF EXISTS public."Employee";
-
--- Table: public.User
-
--- DROP TABLE IF EXISTS public."User";
 
 CREATE TABLE IF NOT EXISTS public."User"
 (
