@@ -1,17 +1,19 @@
--- Database: Clinic
+CREATE TABLE IF NOT EXISTS public."Employee"
+(
+    "EID" integer NOT NULL,
+    "SSN" integer NOT NULL,
+    "First_name" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    "Last_name" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    "Employee_type" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    "Salary" numeric NOT NULL,
+    "Title" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Employee_pkey" PRIMARY KEY ("EID")
+)
 
--- DROP DATABASE IF EXISTS "Clinic";
+TABLESPACE pg_default;
 
-CREATE DATABASE "Clinic"
-    WITH 
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'English_Canada.1252'
-    LC_CTYPE = 'English_Canada.1252'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1;
-
--- Table: public.Branch
+ALTER TABLE IF EXISTS public."Employee"
+    OWNER to postgres;
 
 -- DROP TABLE IF EXISTS public."Branch";
 
@@ -41,23 +43,6 @@ ALTER TABLE IF EXISTS public."Branch"
     -- Table: public.Employee
 
 -- DROP TABLE IF EXISTS public."Employee";
-
-CREATE TABLE IF NOT EXISTS public."Employee"
-(
-    "EID" integer NOT NULL,
-    "SSN" integer NOT NULL,
-    "First_name" character varying(25) COLLATE pg_catalog."default" NOT NULL,
-    "Last_name" character varying(25) COLLATE pg_catalog."default" NOT NULL,
-    "Employee_type" character varying(25) COLLATE pg_catalog."default" NOT NULL,
-    "Salary" numeric NOT NULL,
-    "Title" character varying(25) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT "Employee_pkey" PRIMARY KEY ("EID")
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public."Employee"
-    OWNER to postgres;
 
 -- Table: public.User
 
