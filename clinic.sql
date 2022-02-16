@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS public."Insurance_claim"
 	"PatientID" integer NOT NULL,
 	"Claim_amount" numeric NOT NULL,
 	CONSTRAINT "Insurance_claim_pkey" PRIMARY KEY ("ClaimID"),
-	CONSTRAINT "Insurance_Claim_PatientID_fkey" FOREIGN KEY ("PatientID")
+	CONSTRAINT "Insurance_claim_PatientID_fkey" FOREIGN KEY ("PatientID")
         REFERENCES public."Patient" ("PatientID") MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS public."Insurance_claim"
 
 TABLESPACE pg_default;
 
-ALTER TABLE IF EXISTS public."Insurance_Claim"
+ALTER TABLE IF EXISTS public."Insurance_claim"
 	OWNER to postgres;
 	
 CREATE TABLE IF NOT EXISTS public."Review"
@@ -191,4 +191,67 @@ CREATE TABLE IF NOT EXISTS public."Record"
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."Record"
+	OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Billing"
+(
+	"BillID" integer NOT NULL,
+	"AppointmentID" integer NOT NULL,
+	"PatientID" integer NOT NULL,
+	"ClaimID" integer NOT NULL,
+	"Insurance_charge" float NOT NULL,
+	"Patient_charge" float  NOT NULL,
+	"Total_charge" float NOT NULL,
+	"Payment_type" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+	CONSTRAINT "BillID_pkey" PRIMARY KEY ("BillID"),
+	CONSTRAINT "Billing_AppointmentID_fkey" FOREIGN KEY ("AppointmentID")
+		REFERENCES public."Appointment" ("AppointmentID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION,
+	CONSTRAINT "Billing_PatientID_fkey" FOREIGN KEY ("PatientID")
+		REFERENCES public."Patient" ("PatientID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION,
+	CONSTRAINT "Billing_ClaimID_fkey" FOREIGN KEY ("ClaimID")
+		REFERENCES public."Insurance_claim" ("ClaimID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Billing"
+	OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Invoice"
+(
+	"InvoiceID" integer NOT NULL,
+	"AppointmentID" integer NOT NULL,
+	"PatientID" integer NOT NULL,
+	"Contact_info" character varying(40) COLLATE pg_catalog."default" NOT NULL,
+	"Issue_date" date NOT NULL,
+	"ClaimID" integer NOT NULL,
+	"Insurance_charge" float NOT NULL,
+	"Discount" float  NOT NULL,
+	"Penalty" float  NOT NULL,
+	"Total_charge" float NOT NULL,
+	
+	CONSTRAINT "InvoiceID_pkey" PRIMARY KEY ("InvoiceID"),
+	CONSTRAINT "Invoice_AppointmentID_fkey" FOREIGN KEY ("AppointmentID")
+		REFERENCES public."Appointment" ("AppointmentID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION,
+	CONSTRAINT "Invoice_PatientID_fkey" FOREIGN KEY ("PatientID")
+		REFERENCES public."Patient" ("PatientID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION,
+	CONSTRAINT "Invoice_claimID_fkey" FOREIGN KEY ("ClaimID")
+		REFERENCES public."Insurance_claim" ("ClaimID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Invoice"
 	OWNER to postgres;
