@@ -123,3 +123,72 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."Review"
 	OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Treatment"
+(
+	"TreatmentID" integer NOT NULL,
+	"Treatment_type" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	"Appointment_type" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	"Medication" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	"Symptoms" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	"Tooth" character varying(100) COLLATE pg_catalog."default" NOT NULL,
+	"Description" character varying(200) COLLATE pg_catalog."default" NOT NULL,
+	CONSTRAINT "TreatmentID_pkey" PRIMARY KEY ("TreatmentID")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Treatment"
+	OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Appointment"
+(
+	"AppointmentID" integer NOT NULL,
+	"EID" integer NOT NULL,
+	"PatientID" integer NOT NULL,
+	"TreatmentID" integer NOT NULL,
+	"Date" date NOT NULL,
+	"Room" integer NOT NULL,
+	"Start_time" time NOT NULL,
+	"End_time" time NOT NULL,
+	"Appointment_type" character varying (100) COLLATE pg_catalog."default" NOT NULL,
+	"Status" character varying (100) COLLATE pg_catalog."default" NOT NULL,
+	CONSTRAINT "AppointmentID_pkey" PRIMARY KEY ("AppointmentID"),
+	CONSTRAINT "EID_fkey" FOREIGN KEY ("EID")
+		REFERENCES public."Employee" ("EID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION,
+	CONSTRAINT "PatientID_fkey" FOREIGN KEY ("PatientID")
+		REFERENCES public."Patient" ("PatientID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION,
+	CONSTRAINT "TreatmentID_fkey" FOREIGN KEY ("TreatmentID")
+		REFERENCES public."Treatment" ("TreatmentID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Appointment"
+	OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Record"
+(
+	"RecordID" integer NOT NULL,
+	"AppointmentID" integer NOT NULL,
+	"Treatment_length" time NOT NULL,
+	"Treatment_type" character varying (100) COLLATE pg_catalog."default" NOT NULL,
+	"Patient_status" character varying (100) COLLATE pg_catalog."default"  NOT NULL,
+	"Date" date NOT NULL,
+	CONSTRAINT "RecordID_pkey" PRIMARY KEY ("RecordID"),
+	CONSTRAINT "Record_AppointmentID_fkey" FOREIGN KEY ("AppointmentID")
+		REFERENCES public."Appointment" ("AppointmentID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Record"
+	OWNER to postgres;
