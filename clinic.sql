@@ -80,7 +80,8 @@ CREATE TABLE IF NOT EXISTS public."Patient"
 	"Dob" date NOT NULL,
 	"Phone_no_patient" numeric NOT NULL,
 	CONSTRAINT "Patient_pkey" PRIMARY KEY ("PatientID")
-)
+)INHERITS ("Users")
+
 
 TABLESPACE pg_default;
 
@@ -151,7 +152,7 @@ CREATE TABLE IF NOT EXISTS public."Appointment"
 	"Room" integer NOT NULL,
 	"Start_time" time NOT NULL,
 	"End_time" time NOT NULL,
-	"Appointment_type" character varying (100) COLLATE pg_catalog."default" NOT NULL,
+	"Procedure_type" character varying (100) COLLATE pg_catalog."default" NOT NULL,
 	"Status" character varying (100) COLLATE pg_catalog."default" NOT NULL,
 	CONSTRAINT "AppointmentID_pkey" PRIMARY KEY ("AppointmentID"),
 	CONSTRAINT "EID_fkey" FOREIGN KEY ("EID")
@@ -193,6 +194,31 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public."Record"
 	OWNER to postgres;
 
+
+-- Table: public.Responsible Party
+
+-- DROP TABLE IF EXISTS public."Responsible Party";
+
+CREATE TABLE IF NOT EXISTS public."Responsible Party"
+(
+    "RespPartyID" integer NOT NULL,
+    "First_name" character varying COLLATE pg_catalog."default" NOT NULL,
+    "Last_name" character varying COLLATE pg_catalog."default" NOT NULL,
+    "City" character varying COLLATE pg_catalog."default" NOT NULL,
+    "Province" character varying COLLATE pg_catalog."default" NOT NULL,
+    "Phone_no" character varying COLLATE pg_catalog."default" NOT NULL,
+    "UserID" integer NOT NULL,
+    CONSTRAINT "Responsible Party_pkey" PRIMARY KEY ("RespPartyID"),
+	 FOREIGN KEY("UserID") REFERENCES public."Users"
+	 
+)INHERITS("Users")
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Responsible Party"
+    OWNER to postgres;
+
+	
 CREATE TABLE IF NOT EXISTS public."Billing"
 (
 	"BillID" integer NOT NULL,
@@ -214,6 +240,7 @@ CREATE TABLE IF NOT EXISTS public."Billing"
 		ON DELETE NO ACTION,
 	CONSTRAINT "Billing_ClaimID_fkey" FOREIGN KEY ("ClaimID")
 		REFERENCES public."Insurance_claim" ("ClaimID") MATCH SIMPLE
+
 		ON UPDATE NO ACTION
 		ON DELETE NO ACTION
 )
