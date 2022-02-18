@@ -18,7 +18,6 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public."Users"
     OWNER to postgres;
 
-	
 -- Table: public.Employee
 
 -- DROP TABLE IF EXISTS public."Employee";
@@ -82,6 +81,7 @@ CREATE TABLE IF NOT EXISTS public."Patient"
 	"Phone_no_patient" numeric NOT NULL,
 	CONSTRAINT "Patient_pkey" PRIMARY KEY ("PatientID")
 )INHERITS ("Users")
+
 
 TABLESPACE pg_default;
 
@@ -240,6 +240,7 @@ CREATE TABLE IF NOT EXISTS public."Billing"
 		ON DELETE NO ACTION,
 	CONSTRAINT "Billing_ClaimID_fkey" FOREIGN KEY ("ClaimID")
 		REFERENCES public."Insurance_claim" ("ClaimID") MATCH SIMPLE
+
 		ON UPDATE NO ACTION
 		ON DELETE NO ACTION
 )
@@ -333,4 +334,3 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."Fee"
 	OWNER to postgres;
-

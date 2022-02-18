@@ -5,4 +5,5 @@ CREATE DATABASE "Clinic"
     LC_COLLATE = 'English_Canada.1252'
     LC_CTYPE = 'English_Canada.1252'
     TABLESPACE = pg_default
-    CONNECTION LIMIT = -1;
+    CONNECTION LIMIT = -1
+	TEMPLATE template0;
