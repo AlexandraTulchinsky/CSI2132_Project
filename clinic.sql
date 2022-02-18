@@ -255,3 +255,55 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public."Invoice"
 	OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Procedure"
+(
+	"ProcedureID" integer NOT NULL, 
+	"AppointmentID" integer NOT NULL, 
+	"PatientID" integer NOT NULL,
+	"InvoiceID" integer NOT NUll, 
+	"Date" date NOT NULL, 
+	"Procedure_code" integer NOT NULL, 
+	"Procedure_type" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+	"Procedure_amount" float NOT NULL,
+	"Tooth_description" character varying(120) COLLATE pg_catalog."default" NOT NULL,
+	"Patient_charge" float NOT NULL, 
+	"Insurance_charge" float NOT NULL, 
+	"Insurance_claim_ID" integer NOT NULL,
+	CONSTRAINT "ProcedureID_pkey" PRIMARY KEY ("ProcedureID"),
+	CONSTRAINT "AppointmentID_fkey" FOREIGN KEY ("AppointmentID")
+		REFERENCES public."Appointment" ("AppointmentID") MATCH SIMPLE 
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION, 
+	CONSTRAINT "PatientID_fkey" FOREIGN KEY ("PatientID")
+		REFERENCES public."Patient" ("PatientID") MATCH SIMPLE
+		ON UPDATE NO ACTION 
+		ON DELETE NO ACTION, 
+	CONSTRAINT "InvoiceID_fkey" FOREIGN KEY ("InvoiceID") 
+		REFERENCES public."Invoice" ("InvoiceID") MATCH SIMPLE
+		ON UPDATE NO ACTION 
+		ON DELETE NO ACTION 
+)
+
+TABLESPACE pg_default; 
+
+ALTER TABLE IF EXISTS public."Procedure"
+	OWNER to postgres;
+
+CREATE TABLE IF NOT EXISTS public."Fee"
+(
+	"FeeID" integer NOT NULL,
+	"ProcedureID" integer NOT NULL,
+	"Fee_code" integer NOT NULL, 
+	"Charge" float NOT NULL, 
+	CONSTRAINT "FeeID_pkey" PRIMARY KEY ("FeeID"),
+	CONSTRAINT "Procedure_fkey" FOREIGN KEY ("ProcedureID") 
+	REFERENCES public."Procedure" ("ProcedureID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Fee"
+	OWNER to postgres;
