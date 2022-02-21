@@ -76,10 +76,16 @@ CREATE TABLE IF NOT EXISTS public."Patient"
 	"First_name" character varying(25) COLLATE pg_catalog."default" NOT NULL,
 	"Last_name" character varying(25) COLLATE pg_catalog."default" NOT NULL,
 	"Gender" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+	"Age" integer NOT NULL,
 	"Email_patient" character varying(40) COLLATE pg_catalog."default" NOT NULL,
 	"Dob" date NOT NULL,
 	"Phone_no_patient" numeric NOT NULL,
-	CONSTRAINT "Patient_pkey" PRIMARY KEY ("PatientID")
+	"RespPartyID" integer NOT NULL,
+	CONSTRAINT "Patient_pkey" PRIMARY KEY ("PatientID"),
+	CONSTRAINT "Patient_RespPartyID_fkey" FOREIGN KEY ("RespPartyID")
+		REFERENCES public."Responsible Party" ("RespPartyID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 )INHERITS ("Users")
 
 
@@ -288,8 +294,7 @@ CREATE TABLE IF NOT EXISTS public."Procedure"
 	"ProcedureID" integer NOT NULL, 
 	"AppointmentID" integer NOT NULL, 
 	"PatientID" integer NOT NULL,
-	"InvoiceID" integer NOT NUll, 
-	"Date" date NOT NULL, 
+	"InvoiceID" integer NOT NUll,
 	"Procedure_code" integer NOT NULL, 
 	"Procedure_type" character varying(25) COLLATE pg_catalog."default" NOT NULL,
 	"Procedure_amount" float NOT NULL,
