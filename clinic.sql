@@ -45,6 +45,7 @@ ALTER TABLE IF EXISTS public."Employee"
 
 CREATE TABLE IF NOT EXISTS public."Branch"
 (
+	"BranchID" integer NOT NULL,
     "Phone_no" numeric NOT NULL,
     "Build_no" numeric NOT NULL,
     "Street" character varying(25) COLLATE pg_catalog."default" NOT NULL,
@@ -52,8 +53,8 @@ CREATE TABLE IF NOT EXISTS public."Branch"
     "Country" character varying(25) COLLATE pg_catalog."default" NOT NULL,
     "Postal_code" character varying COLLATE pg_catalog."default" NOT NULL,
     "EID" integer NOT NULL,
-    "City" integer NOT NULL,
-    CONSTRAINT "Branch_pkey" PRIMARY KEY ("City"),
+    "City" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Branch_pkey" PRIMARY KEY ("BranchID", "City"),
     CONSTRAINT "Branch_EID_fkey" FOREIGN KEY ("EID")
         REFERENCES public."Employee" ("EID") MATCH SIMPLE
         ON UPDATE NO ACTION
