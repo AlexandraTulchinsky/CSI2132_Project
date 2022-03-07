@@ -45,6 +45,7 @@ ALTER TABLE IF EXISTS public."Employee"
 
 CREATE TABLE IF NOT EXISTS public."Branch"
 (
+	"BranchID" integer NOT NULL,
     "Phone_no" numeric NOT NULL,
     "Build_no" numeric NOT NULL,
     "Street" character varying(25) COLLATE pg_catalog."default" NOT NULL,
@@ -52,8 +53,8 @@ CREATE TABLE IF NOT EXISTS public."Branch"
     "Country" character varying(25) COLLATE pg_catalog."default" NOT NULL,
     "Postal_code" character varying COLLATE pg_catalog."default" NOT NULL,
     "EID" integer NOT NULL,
-    "City" integer NOT NULL,
-    CONSTRAINT "Branch_pkey" PRIMARY KEY ("City"),
+    "City" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Branch_pkey" PRIMARY KEY ("BranchID", "City"),
     CONSTRAINT "Branch_EID_fkey" FOREIGN KEY ("EID")
         REFERENCES public."Employee" ("EID") MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -76,10 +77,16 @@ CREATE TABLE IF NOT EXISTS public."Patient"
 	"First_name" character varying(25) COLLATE pg_catalog."default" NOT NULL,
 	"Last_name" character varying(25) COLLATE pg_catalog."default" NOT NULL,
 	"Gender" character varying(25) COLLATE pg_catalog."default" NOT NULL,
+	"Age" integer NOT NULL,
 	"Email_patient" character varying(40) COLLATE pg_catalog."default" NOT NULL,
 	"Dob" date NOT NULL,
 	"Phone_no_patient" numeric NOT NULL,
-	CONSTRAINT "Patient_pkey" PRIMARY KEY ("PatientID")
+	"RespPartyID" integer NOT NULL,
+	CONSTRAINT "Patient_pkey" PRIMARY KEY ("PatientID"),
+	CONSTRAINT "Patient_RespPartyID_fkey" FOREIGN KEY ("RespPartyID")
+		REFERENCES public."Responsible Party" ("RespPartyID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+        ON DELETE NO ACTION
 )INHERITS ("Users")
 
 
@@ -93,7 +100,6 @@ CREATE TABLE IF NOT EXISTS public."Insurance_claim"
 	"ClaimID" integer NOT NULL,
 	"PatientID" integer NOT NULL,
 	"Claim_amount" numeric NOT NULL,
-	CONSTRAINT "Insurance_claim_pkey" PRIMARY KEY ("ClaimID"),
 	CONSTRAINT "Insurance_claim_PatientID_fkey" FOREIGN KEY ("PatientID")
         REFERENCES public."Patient" ("PatientID") MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -113,7 +119,6 @@ CREATE TABLE IF NOT EXISTS public."Review"
 	"Communication" character varying(200) COLLATE pg_catalog."default" NOT NULL,
 	"Cleanliness" character varying(200) COLLATE pg_catalog."default" NOT NULL,
 	"Value" character varying(200) COLLATE pg_catalog."default" NOT NULL,
-	CONSTRAINT "Review_pkey" PRIMARY KEY ("ReviewID"),
 	CONSTRAINT "Review_PatientID_fkey" FOREIGN KEY ("PatientID")
 		REFERENCES public."Patient" ("PatientID") MATCH SIMPLE
 		ON UPDATE NO ACTION
@@ -154,7 +159,6 @@ CREATE TABLE IF NOT EXISTS public."Appointment"
 	"End_time" time NOT NULL,
 	"Procedure_type" character varying (100) COLLATE pg_catalog."default" NOT NULL,
 	"Status" character varying (100) COLLATE pg_catalog."default" NOT NULL,
-	CONSTRAINT "AppointmentID_pkey" PRIMARY KEY ("AppointmentID"),
 	CONSTRAINT "EID_fkey" FOREIGN KEY ("EID")
 		REFERENCES public."Employee" ("EID") MATCH SIMPLE
 		ON UPDATE NO ACTION
@@ -177,14 +181,13 @@ ALTER TABLE IF EXISTS public."Appointment"
 CREATE TABLE IF NOT EXISTS public."Record"
 (
 	"RecordID" integer NOT NULL,
-	"AppointmentID" integer NOT NULL,
+	"PatientID" integer NOT NULL,
 	"Treatment_length" time NOT NULL,
 	"Treatment_type" character varying (100) COLLATE pg_catalog."default" NOT NULL,
 	"Patient_status" character varying (100) COLLATE pg_catalog."default"  NOT NULL,
 	"Date" date NOT NULL,
-	CONSTRAINT "RecordID_pkey" PRIMARY KEY ("RecordID"),
-	CONSTRAINT "Record_AppointmentID_fkey" FOREIGN KEY ("AppointmentID")
-		REFERENCES public."Appointment" ("AppointmentID") MATCH SIMPLE
+	CONSTRAINT "Record_PatientID_fkey" FOREIGN KEY ("PatientID")
+		REFERENCES public."Patient" ("PatientID") MATCH SIMPLE
 		ON UPDATE NO ACTION
 		ON DELETE NO ACTION
 )
@@ -202,6 +205,7 @@ ALTER TABLE IF EXISTS public."Record"
 CREATE TABLE IF NOT EXISTS public."Responsible Party"
 (
     "RespPartyID" integer NOT NULL,
+	"PatientID" integer NOT NULL,
     "First_name" character varying COLLATE pg_catalog."default" NOT NULL,
     "Last_name" character varying COLLATE pg_catalog."default" NOT NULL,
     "City" character varying COLLATE pg_catalog."default" NOT NULL,
@@ -209,7 +213,11 @@ CREATE TABLE IF NOT EXISTS public."Responsible Party"
     "Phone_no" character varying COLLATE pg_catalog."default" NOT NULL,
     "UserID" integer NOT NULL,
     CONSTRAINT "Responsible Party_pkey" PRIMARY KEY ("RespPartyID"),
-	 FOREIGN KEY("UserID") REFERENCES public."Users"
+	FOREIGN KEY("UserID") REFERENCES public."Users",
+	CONSTRAINT "Responsible Party_PatientID_fkey" FOREIGN KEY("PatientID")
+		REFERENCES Public."Patient" ("PatientID") MATCH SIMPLE
+		ON UPDATE NO ACTION
+		ON DELETE NO ACTION
 	 
 )INHERITS("Users")
 
@@ -229,7 +237,6 @@ CREATE TABLE IF NOT EXISTS public."Billing"
 	"Patient_charge" float  NOT NULL,
 	"Total_charge" float NOT NULL,
 	"Payment_type" character varying(25) COLLATE pg_catalog."default" NOT NULL,
-	CONSTRAINT "BillID_pkey" PRIMARY KEY ("BillID"),
 	CONSTRAINT "Billing_AppointmentID_fkey" FOREIGN KEY ("AppointmentID")
 		REFERENCES public."Appointment" ("AppointmentID") MATCH SIMPLE
 		ON UPDATE NO ACTION
@@ -262,8 +269,6 @@ CREATE TABLE IF NOT EXISTS public."Invoice"
 	"Discount" float  NOT NULL,
 	"Penalty" float  NOT NULL,
 	"Total_charge" float NOT NULL,
-	
-	CONSTRAINT "InvoiceID_pkey" PRIMARY KEY ("InvoiceID"),
 	CONSTRAINT "Invoice_AppointmentID_fkey" FOREIGN KEY ("AppointmentID")
 		REFERENCES public."Appointment" ("AppointmentID") MATCH SIMPLE
 		ON UPDATE NO ACTION
@@ -288,15 +293,13 @@ CREATE TABLE IF NOT EXISTS public."Procedure"
 	"ProcedureID" integer NOT NULL, 
 	"AppointmentID" integer NOT NULL, 
 	"PatientID" integer NOT NULL,
-	"InvoiceID" integer NOT NUll, 
-	"Date" date NOT NULL, 
+	"InvoiceID" integer NOT NUll,
 	"Procedure_code" integer NOT NULL, 
 	"Procedure_type" character varying(25) COLLATE pg_catalog."default" NOT NULL,
 	"Procedure_amount" float NOT NULL,
 	"Tooth_description" character varying(120) COLLATE pg_catalog."default" NOT NULL,
 	"Patient_charge" float NOT NULL, 
 	"Insurance_charge" float NOT NULL, 
-	"Insurance_claim_ID" integer NOT NULL,
 	CONSTRAINT "ProcedureID_pkey" PRIMARY KEY ("ProcedureID"),
 	CONSTRAINT "AppointmentID_fkey" FOREIGN KEY ("AppointmentID")
 		REFERENCES public."Appointment" ("AppointmentID") MATCH SIMPLE 
@@ -322,8 +325,7 @@ CREATE TABLE IF NOT EXISTS public."Fee"
 	"FeeID" integer NOT NULL,
 	"ProcedureID" integer NOT NULL,
 	"Fee_code" integer NOT NULL, 
-	"Charge" float NOT NULL, 
-	CONSTRAINT "FeeID_pkey" PRIMARY KEY ("FeeID"),
+	"Charge" float NOT NULL,
 	CONSTRAINT "Procedure_fkey" FOREIGN KEY ("ProcedureID") 
 	REFERENCES public."Procedure" ("ProcedureID") MATCH SIMPLE
 		ON UPDATE NO ACTION
