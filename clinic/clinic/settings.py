@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +26,7 @@ SECRET_KEY = 'django-insecure-z*5tyt0x4^$0hlo==r_3r*_vau+^6f&kv=u4e!ioc#1z(v8gxq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1'] # local until deployment
 
 
 # Application definition
@@ -75,8 +76,12 @@ WSGI_APPLICATION = 'clinic.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dfh29mquhf7ina',
+        'USER': 'zjgznqwgbdvrgm',
+        'PASSWORD': 'e88f596a2ff24d1d42c64ad1a8813d3375eeeb4ab50dd781996d392717dfd698',
+        'HOST': 'ec2-3-228-222-169.compute-1.amazonaws.com',
+        'POST': '5432',
     }
 }
 
