@@ -1,0 +1,59 @@
+<html>
+
+</head>
+
+<body>
+
+    <form method='post' action=''>
+        {% csrf_token %}
+        <h1>Add a New Patient!</h1>
+        <h4>Note: if the patient's age is less or equal to 15 years old, the
+            patient's reponsable party information should be taken.
+        </h4>
+
+
+        <label for="ssn">SSN :</label>
+        <input type="text" id="ssn" name="ssn"><br><br>
+
+        <label for="houseNo">House Number:</label>
+        <input type="text" id="houseNo" name="houseNo"><br><br>
+
+        <label for="street">Street:</label>
+        <input type="text" id="street" name="street"><br><br>
+        
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city"><br><br>
+
+        <label for="province">Province:</label>
+        <input type="text" id="province" name="province"><br><br>
+
+
+        <label for="fname">First name:</label>
+        <input type="text" id="fname" name="fname"><br><br>
+
+        <label for="lname">Last name:</label>
+        <input type="text" id="lname" name="lname"><br><br>
+
+        <label for="gender">Gender :</label>
+        <input type="text" id="gender" name="gender"><br><br>
+     
+          
+        <label for="dob">Date of Birth ( yyyy-mm-dd ) :</label>
+        <input type="text" id="dob" name="dob"><br><br>
+
+        <label for="email">Email :</label>
+        <input type="text" id="email" name="email"><br><br>
+
+        <label for="phoneNo">Phone number :</label>
+        <input type="text" id="phoneNo" name="phoneNo"><br><br>
+
+        <button type="submit" name="submit">Submit !</button>
+
+        <button type="back" name="back">Back to home page !</button>
+
+
+
+    </form>
+</body>
+
+</html>
