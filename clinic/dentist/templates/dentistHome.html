@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Home — dentist</title>
+        <style>
+            .headerDiv{
+                background-image: linear-gradient(to bottom right, lightblue, rgb(238, 246, 255));
+                font-family: sans-serif;
+                color: rgb(27, 66, 77);
+                padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .buttonDiv{
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+            }
+            .signOutButton{
+                height: 50px;
+                width: 100px;
+                border-radius: 6px;
+                font-size: 18px;
+            }
+            .optionButton{
+                background-color: rgb(238, 246, 255);
+                border: 3px solid rgb(147, 182, 194);
+                height: 100px;
+                width: 180px;
+                margin: 20px;
+                border-radius: 6px;
+                font-size: 22px;
+                transition-duration: 0.2s;
+            }
+            .optionButton:hover{
+                background-color: rgb(147, 182, 194);
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="headerDiv">
+            <h2>Dentist Portal</h3>
+            <h2>Welcome</h4>
+            <button class="signOutButton">Sign out</button>
+        </div>
+        <div class="buttonDiv">
+            <form action="">
+                <button type="submit" class="optionButton">View & edit patient records</button>
+            </form>
+            <form action="http://127.0.0.1:8000/dentist/view_appt">
+                <button type="submit" class="optionButton">Upcoming appointments</button>
+            </form>
+            <form action="">
+                <button type="submit" class="optionButton">Treatments</button>
+            </form>
+        </div>
+    </body>
+</html>
