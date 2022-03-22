@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create an account</title>
+</head>
+<body>
+  <form method='post' action=''>
+    {% csrf_token %}
+    <h1>Create an account</h1>
+    
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email"><br><br>
+
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+
+    <label for="phoneNo">Phone number:</label>
+    <input type="text" id="phoneNo" name="phoneNo"><br><br>
+
+    <button type="submit" name="submit">Submit!</button>
+
+    <button type="back" name="back">Back to home page!</button>
+</form>
+</body>
+</html>
