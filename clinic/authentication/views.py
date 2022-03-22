@@ -4,15 +4,18 @@ def signup(request):
     '''
     View for creating a new user.
     '''
+    if request.method == "GET":
+        return render(request, 'signup.html')
     
-    return render(request, 'signup.html')
+    elif request.method == "POST":
+        pass
     
 def signin(request):
     '''
     View for signing a user in.
     '''
     
-def logout(request):
+def signout(request):
     '''
-    View for logging a user out.
+    View for signing a user out.
     '''
