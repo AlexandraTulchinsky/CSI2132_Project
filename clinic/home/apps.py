@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-
-class DentistConfig(AppConfig):
+class HomeConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'dentist'
+    name = 'home'
