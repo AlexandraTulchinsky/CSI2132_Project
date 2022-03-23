@@ -6,12 +6,13 @@ def create_user(email, username, password, user_type):
     '''
     with connection.cursor() as cursor:
         cursor.execute('INSERT INTO "Users" ("Email", "Username", "Password", "User_type") VALUES(%s,%s,%s,%s)', (email, username, password, user_type))
-        # session.get("user_id") -> 123
-        
-        
-def get_user_data(id):
+            
+def get_user_password(username):
+    '''
+    Return the password hash of a user.
+    '''
     with connection.cursor() as cursor:
-        cursor.execute('SELECT * FROM "Users" WHERE "UserID" = %s', (id))
+        cursor.execute('SELECT "Password", "UserID" FROM "Users" WHERE "Users"."Username" = %s', [username])
         row = cursor.fetchone()
         
     return row
