@@ -14,10 +14,6 @@ from random import randint
 
 # Create your views here.
 
-TEMPLATE_DIRS = (
-
-    'os.path.join(BASE_DIR, "templates"),'
-)
 def index(request):
 
     if request.method == "GET":
