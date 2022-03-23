@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>View procedures — dentist</title>
+        <style>
+            .headerDiv{
+                background-image: linear-gradient(to bottom right, lightblue, rgb(238, 246, 255));
+                font-family: sans-serif;
+                color: rgb(27, 66, 77);
+                padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .buttonDiv{
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+            }
+            .signOutButton{
+                height: 50px;
+                width: 100px;
+                border-radius: 6px;
+                font-size: 18px;
+                background-color: white;
+                color: rgb(22, 66, 77);
+                border: 2px solid rgb(147, 182, 194);
+                transition-duration: 0.2s;
+            }
+            .signOutButton:hover{
+                background-color: rgb(147, 182, 194);
+                color: white;
+            }
+            table, th, td{
+                border-collapse: collapse;
+                font-family: sans-serif;
+            }
+            th, td{
+                padding: 10px;
+                text-align: center;
+            }
+            tr:nth-child(odd){
+                background-color: whitesmoke;
+            }
+            th{
+                border: 2px solid white;
+                background-color: rgb(147, 182, 194);
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="headerDiv">
+            <h2>Dentist Portal</h3>
+            <h2>Welcome</h4>
+            <button class="signOutButton">Sign out</button>
+        </div>
+
+        <h1 style="font-family: sans-serif; padding-left: 20px;">View Procedures & Treatments</h1>
+
+        <h2 style="font-family: sans-serif; padding-left: 20px;">Procedures:</h2>
+        <table style="margin-left: 20px;">
+            <tr>
+                <th>Procedure ID</th>
+                <th>Appointment ID</th>
+                <th>Patient ID</th>
+                <th>Invoice ID</th>
+                <th>Procedure code</th>
+                <th>Procedure type</th>
+                <th>Procedure amount</th>
+                <th>Tooth description</th>
+                <th>Patient charge</th>
+                <th>Insurance charge</th>
+            </tr>
+            {% if procedureRows %}
+                {% for row in procedureRows %}
+                    <tr>
+                        <td>{{ row.ProcedureID }}</td>
+                        <td>{{ row.AppointmentID }}</td>
+                        <td>{{ row.PatientID }}</td>
+                        <td>{{ row.InvoiceID }}</td>
+                        <td>{{ row.Procedure_code }}</td>
+                        <td>{{ row.Procedure_type }}</td>
+                        <td>{{ row.Procedure_amount }}</td>
+                        <td>{{ row.Tooth_description }}</td>
+                        <td>{{ row.Patient_charge }}</td>
+                        <td>{{ row.Insurance_charge }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+        
+        <h2 style="font-family: sans-serif; padding-left: 20px;">Available treatments:</h2>
+        <table style="margin-left: 20px;">
+            <tr>
+                <th>Treatment ID</th>
+                <th>Treatment type</th>
+                <th>Appointment type</th>
+                <th>Medication</th>
+                <th>Symptoms</th>
+                <th>Tooth</th>
+                <th>Description</th>
+            </tr>
+            {% if treatmentRows %}
+                {% for row in treatmentRows %}
+                    <tr>
+                        <td>{{ row.TreatmentID }}</td>
+                        <td>{{ row.Treatment_type }}</td>
+                        <td>{{ row.Appointment_type }}</td>
+                        <td>{{ row.Medication }}</td>
+                        <td>{{ row.Symptoms }}</td>
+                        <td>{{ row.Tooth }}</td>
+                        <td>{{ row.Description }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </body>
+</html>

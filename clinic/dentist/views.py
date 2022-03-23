@@ -9,11 +9,19 @@ def viewAppt(request):
         cursor.execute('SELECT * FROM "Appointment" WHERE "Status" = \'upcoming\'')
         apptRows = dictfetchone(cursor)
 
-    # print(apptRows[1][9]) # test print
-    # print(apptRows) # test print
-
     context = {'apptRows': apptRows}
     return render(request, 'viewAppointments.html', context)
+
+def viewProcedures(request):
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM "Treatment"')
+        treatmentRows = dictfetchone(cursor)
+
+        cursor.execute('SELECT * FROM "Procedure"')
+        procedureRows = dictfetchone(cursor)
+
+    context = {'treatmentRows': treatmentRows, 'procedureRows': procedureRows}
+    return render(request, 'viewProcedures.html', context)
 
 def dictfetchone(cursor):
     columns = [col[0] for col in cursor.description]
