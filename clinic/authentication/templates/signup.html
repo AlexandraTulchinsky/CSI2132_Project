@@ -4,28 +4,58 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <title>Create an account</title>
+  <style>
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    button, input {
+      margin-bottom: 4px;
+    }
+
+    button {
+      border-width: 1px;
+    }
+
+    p {
+      margin-bottom: 4px;
+    }
+  </style>
 </head>
 <body>
+  <a href="/home">Back to home page!</a>
+
   <form method='post' action=''>
     {% csrf_token %}
     <h1>Create an account</h1>
     
-    <label for="email">Email:</label>
-    <input type="text" id="email" name="email"><br><br>
+    <input type="text" id="email" name="email" placeholder="Email">
+    <input type="text" id="username" name="username" placeholder="Username">
+    <input type="password" id="password" name="password" placeholder="Password">
 
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username"><br><br>
-    
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password"><br><br>
-
-    <label for="phoneNo">Phone number:</label>
-    <input type="text" id="phoneNo" name="phoneNo"><br><br>
+    <p>User Type:</p>
+    <div id="user-type-button">
+      <div>
+        <input type="radio" value="Dentist" name="type">
+        <label>Dentist</label>
+      </div>
+      <div>
+        <input type="radio" value="Patient" name="type">
+        <label>Patient</label>
+      </div>
+      <div>
+        <input type="radio" value="Receptionist" name="type">
+        <label>Receptionist</label>
+      </div>
+    </div>
 
     <button type="submit" name="submit">Submit!</button>
+    <h4>{{ error }}</h4>
 
-    <button type="back" name="back">Back to home page!</button>
-</form>
+  </form>
 </body>
 </html>
