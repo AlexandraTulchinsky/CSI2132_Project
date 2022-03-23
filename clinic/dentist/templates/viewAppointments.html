@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>View appointments — dentist</title>
+        <style>
+            .headerDiv{
+                background-image: linear-gradient(to bottom right, lightblue, rgb(238, 246, 255));
+                font-family: sans-serif;
+                color: rgb(27, 66, 77);
+                padding: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .signOutButton{
+                height: 50px;
+                width: 100px;
+                border-radius: 6px;
+                font-size: 18px;
+            }
+            table, th, td{
+                border-collapse: collapse;
+                font-family: sans-serif;
+            }
+            th, td{
+                padding: 10px;
+                text-align: center;
+            }
+            tr:nth-child(odd){
+                background-color: whitesmoke;
+            }
+            th{
+                border: 2px solid white;
+                background-color: rgb(147, 182, 194);
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="headerDiv">
+            <h2>Dentist Portal</h3>
+            <h2>Welcome</h4>
+            <button class="signOutButton">Sign out</button>
+        </div>
+        <h1 style="font-family: sans-serif; padding-left: 20px;">View upcoming appointments</h1>
+        
+        <table style="margin-left: 20px;">
+            <tr>
+                <th>Appointment ID</th>
+                <th>Employee ID</th>
+                <th>Patient ID</th>
+                <th>Treatment ID</th>
+                <th>Date</th>
+                <th>Room</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Procedure type</th>
+                <th>Status</th>
+            </tr>
+            {% if apptRows %}
+                {% for row in apptRows %}
+                    <tr>
+                        <td>{{ row.AppointmentID }}</td>
+                        <td>{{ row.EID }}</td>
+                        <td>{{ row.PatientID }}</td>
+                        <td>{{ row.TreatmentID }}</td>
+                        <td>{{ row.Date }}</td>
+                        <td>{{ row.Room }}</td>
+                        <td>{{ row.Start_time }}</td>
+                        <td>{{ row.End_time }}</td>
+                        <td>{{ row.Procedure_type }}</td>
+                        <td>{{ row.Status }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </body>
+</html>

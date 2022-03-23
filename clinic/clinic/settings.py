@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'Receptionist',
     'patient',
     'home',
-    'authentication'
+    'authentication',
+    'dentist'
 ]
 
 MIDDLEWARE = [
@@ -115,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 
