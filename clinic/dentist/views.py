@@ -6,7 +6,18 @@ def dentistHome(request):
 
 def viewAppt(request):
     with connection.cursor() as cursor:
-        cursor.execute('SELECT * FROM "Branch"') # WHERE Date > today OR (DATE = today AND Start_time > now)
-        apptRows = cursor.fetchall() # apptRows is what? an array? can I iterate through it?
-    print(apptRows)
-    return render(request, 'viewAppointments.html')
+        cursor.execute('SELECT * FROM "Appointment" WHERE "Status" = \'upcoming\'')
+        apptRows = dictfetchone(cursor)
+
+    # print(apptRows[1][9]) # test print
+    # print(apptRows) # test print
+
+    context = {'apptRows': apptRows}
+    return render(request, 'viewAppointments.html', context)
+
+def dictfetchone(cursor):
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+    ]
