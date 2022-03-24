@@ -1,0 +1,50 @@
+<html>
+
+</head>
+
+<body>
+
+    
+    <form method='post' action=''>
+        {% csrf_token %}
+     
+        <h1>Schedule an Appointment</h1>
+ 
+        <label for="EID">Enter the Employee ID:</label>
+        <input type="text" id="EID" name="EID"><br><br>
+
+        <label for="PID">Enter the Patient ID:</label>
+        <input type="text" id="PID" name="PID"><br><br>
+        
+        <label for="TID">Enter the Treatment ID:</label>
+        <input type="text" id="TID" name="TID"><br><br>
+        
+        <label for="day">Enter the date of the appointment (yyyy-mm-dd):</label>
+        <input type="text" id="day" name="day"><br><br>
+        
+        <label for="roomNo">Enter the room mumber:</label>
+        <input type="text" id="roomNo" name="roomNo"><br><br>
+        
+        <label for="start">Enter the start time :</label>
+        <input type="text" id="start" name="start"><br><br>
+        
+        <label for="end">Enter the end time:</label>
+        <input type="text" id="end" name="end"><br><br>
+        
+        <label for="proType">Enter the procedure type:</label>
+        <input type="text" id="proType" name="proType"><br><br>
+        
+        <label for="state">Enter the status:</label>
+        <input type="text" id="state" name="state"><br><br>
+     
+
+        <button type="submit" name="submit">Submit !</button>
+
+        <button type="back" name="back">Back to home page !</button>
+
+
+
+    </form>
+</body>
+
+</html>

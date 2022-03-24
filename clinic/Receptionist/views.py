@@ -1,3 +1,4 @@
+from datetime import date
 import random
 from xmlrpc.client import MAXINT
 from django.shortcuts import render
@@ -6,19 +7,44 @@ from django.db import connection
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 
-
+from authentication.views import login_required
 
 from django.db import models
 from django.db.models import Model
 from random import randint
 
 # Create your views here.
+def index2(request):
+
+    if request.method == "GET":
+        return render (request, "setAppt.html")
+
+    elif request.method == "POST":
+
+        day = request.POST["day"]
+        roomNo = request.POST["roomNo"]
+        start = request.POST["start"]
+        end = request.POST["end"]
+        proType = request.POST["proType"]
+        state = request.POST["state"]
+
+    if "submit" in request.POST:
+
+        ApptID = random.randint(0,MAXINT)
+       
+        
+        with connection.cursor() as cursor:
+            cursor.execute('INSERT INTO "Appointment" VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)', (0,0,0,day,roomNo,start,end,proType,state,ApptID))
+                   
+
+    return HttpResponse()
+
 
 def index(request):
 
     if request.method == "GET":
         return render (request, "addPatient.html")
-
+    
 
     # if post request comes from the submit button
     # then saving patient info in database
