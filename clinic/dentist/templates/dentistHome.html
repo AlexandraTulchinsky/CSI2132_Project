@@ -22,6 +22,14 @@
                 width: 100px;
                 border-radius: 6px;
                 font-size: 18px;
+                background-color: white;
+                color: rgb(22, 66, 77);
+                border: 2px solid rgb(147, 182, 194);
+                transition-duration: 0.2s;
+            }
+            .signOutButton:hover{
+                background-color: rgb(147, 182, 194);
+                color: white;
             }
             .optionButton{
                 background-color: rgb(238, 246, 255);
@@ -52,8 +60,8 @@
             <form action="http://127.0.0.1:8000/dentist/view_appt">
                 <button type="submit" class="optionButton">Upcoming appointments</button>
             </form>
-            <form action="">
-                <button type="submit" class="optionButton">Treatments</button>
+            <form action="http://127.0.0.1:8000/dentist/view_procedures">
+                <button type="submit" class="optionButton">Procedures</button>
             </form>
         </div>
     </body>
