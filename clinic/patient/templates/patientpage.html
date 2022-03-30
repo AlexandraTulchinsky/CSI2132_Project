@@ -10,26 +10,27 @@
 
         <h4 align="center">Account Information</h4>
     <table align="center">
+        {{apptRows.PatientID}}
 
         <tr>
           <td>First Name :</td>
-          <td><input type="text" id="fname" name="fname" value = '{{ First_name }}' disabled></td>
+          <td><input type="text" id="fname" name="fname" value = '{{ patientRows.First_name }}' disabled></td>
         </tr>
         <tr>
             <td>Last Name :</td>
-            <td><input type="text" id="lname" name="lname" value = '{{ Last_name }}' disabled></td>
+            <td><input type="text" id="lname" name="lname" value = '{{ patientRows.Last_name }}' disabled></td>
           </tr>
         <tr>
           <td>Email :</td>
-          <td><input type="text" id="email" name="email" value='{{ Email_patient }}' disabled></td>
+          <td><input type="text" id="email" name="email" value='{{ patientRows.Email_patient }}' disabled></td>
         </tr>
         <tr>
             <td>Phone Number :</td>
-            <td><input type="text" id="email" name="email" value='{{ Phone_no_patient }}' disabled></td>
+            <td><input type="text" id="email" name="email" value='{{ patientRows.Phone_no_patient }}' disabled></td>
           </tr>
         <tr>
          <td >DOB :</td>
-         <td><input type="text" id="dob" name="dob" value = '{{ Dob }}' disabled></td>
+         <td><input type="text" id="dob" name="dob" value = '{{ patientRows.Dob }}' disabled></td>
           </tr>
       </table>
 
@@ -37,19 +38,19 @@
       <table align="center">
           <tr>
               <td>House/Building Number: </td>
-              <td><input type="text" id="house" name="house" value = '{{ House_no }}' disabled></td>
+              <td><input type="text" id="house" name="house" value = '{{ patientRows.House_no }}' disabled></td>
           </tr>
           <tr>
             <td>Street: </td>
-            <td><input type="text" id="street" name="street" value = '{{ Street }}' disabled></td>
+            <td><input type="text" id="street" name="street" value = '{{ patientRows.Street }}' disabled></td>
         </tr>
         <tr>
             <td>City: </td>
-            <td><input type="text" id="cty" name="cty" value = '{{ City_name }}' disabled></td>
+            <td><input type="text" id="cty" name="cty" value = '{{ patientRows.City_name }}' disabled></td>
         </tr>
         <tr>
             <td>Province: </td>
-            <td><input type="text" id="prov" name="prov" value = '{{ Province }}' disabled></td>
+            <td><input type="text" id="prov" name="prov" value = '{{ patientRows.Province }}' disabled></td>
         </tr>
       </table>
 
@@ -57,6 +58,40 @@
       <button class="btn btn-success" onclick=" window.open('http://127.0.0.1:8000/Receptionist/Add Patient')"> Submit an Insurance Claim</button>
       <button class="btn btn-success" onclick=" window.open('http://127.0.0.1:8000/Receptionist/Add Patient')"> Write a Review</button>
       
+      <h2 style= "padding-left: 250px";>View upcoming appointments</h2>
+        
+      <table style="margin-right: 20px;">
+          <tr>
+              <th>Appointment ID</th>
+              <th>Employee ID</th>
+              <th>Patient ID</th>
+              <th>Treatment ID</th>
+              <th>Date</th>
+              <th>Room</th>
+              <th>Start time</th>
+              <th>End time</th>
+              <th>Procedure type</th>
+              <th>Status</th>
+          </tr>
+          {% if apptRows %}
+              {% for row in apptRows %}
+                  <tr>
+                      <td>{{ row.AppointmentID }}</td>
+                      <td>{{ row.EID }}</td>
+                      <td>{{ row.PatientID }}</td>
+                      <td>{{ row.TreatmentID }}</td>
+                      <td>{{ row.Date }}</td>
+                      <td>{{ row.Room }}</td>
+                      <td>{{ row.Start_time }}</td>
+                      <td>{{ row.End_time }}</td>
+                      <td>{{ row.Procedure_type }}</td>
+                      <td>{{ row.Status }}</td>
+                  </tr>
+              {% endfor %}
+          {% endif %}
+      </table>
+    
+                        
       
       <h4 align="center">Please Review Current Invoice Information</h4>
 

@@ -7,20 +7,28 @@ from django.http import HttpResponse
 # def dentistHome(request):
 #     return render(request,'patientpage.html')
 
-def viewAppt(request):
+
+def viewPatient(request):
     with connection.cursor() as cursor:
-        cursor.execute('SELECT * FROM "Patient" WHERE "Patient"."PatientID" = 101') # WHERE Date > today OR (DATE = today AND Start_time > now)
-        apptRows = dictfetchone(cursor) # apptRows is what? an array? can I iterate through it?
-    print(apptRows)
-    context = {'apptRows': apptRows[0]}
-    return render(request, 'patientpage.html', apptRows[0])
+        cursor.execute('SELECT * FROM "Patient" WHERE "Patient"."PatientID" = 101') 
+        patientRows = dictfetchone(cursor) 
+    #print(apptRows)
+    context = {'patientRows': patientRows[0], 'apptRows':viewAppointments()}
+    
+    return render(request, 'patientpage.html', context)
     #render(apptRows)
 
-# def index(request):
-#     if request.method == "GET":
-#         return render (request, "patientpage.html")
+def viewAppointments():
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM "Appointment" WHERE "Status" = \'upcoming\' AND "PatientID" = 101') 
+        
+        apptRows = dictfetchone(cursor)
+    print(apptRows)
 
-#     return HttpResponse()
+    context = {'apptRows': apptRows}
+    return apptRows
+    #return render(request, 'patientpage.html', context)
+
 
 def dictfetchone(cursor):
     "Return all rows from a cursor as a dict"
