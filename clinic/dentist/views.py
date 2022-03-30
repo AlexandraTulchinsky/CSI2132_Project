@@ -20,7 +20,9 @@ def viewProcedures(request):
         cursor.execute('SELECT * FROM "Procedure"')
         procedureRows = dictfetchone(cursor)
 
-    context = {'treatmentRows': treatmentRows, 'procedureRows': procedureRows}
+    context = {'treatmentRows': treatmentRows, 
+               'procedureRows': procedureRows}
+               
     return render(request, 'viewProcedures.html', context)
 
 def dictfetchone(cursor):
