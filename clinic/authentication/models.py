@@ -12,7 +12,7 @@ def get_user_password(username):
     Return the password hash of a user.
     '''
     with connection.cursor() as cursor:
-        cursor.execute('SELECT "Password", "UserID" FROM "Users" WHERE "Users"."Username" = %s', [username])
+        cursor.execute('SELECT "Password", "UserID", "User_type" FROM "Users" WHERE "Users"."Username" = %s', [username])
         row = cursor.fetchone()
         
     return row

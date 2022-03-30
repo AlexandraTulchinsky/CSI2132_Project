@@ -21,6 +21,9 @@ def signup(request):
         # attempt to create the new user
         try:
             create_user(email, username, pass_hash, type)
+            user_info = get_user_password(username)
+            request.session["user_id"] = user_info[1]
+            request.session["user_type"] = user_info[2]
             
         except Exception as e:
             print(str(e))
@@ -56,6 +59,8 @@ def signin(request):
             user_info = get_user_password(username) # returns tuple
             if check_password(request.POST["password"], user_info[0]):
                 request.session["user_id"] = user_info[1]
+                request.session["user_type"] = user_info[2]
+                
                 return redirect('/')
             else:
                 print("fail")
@@ -73,6 +78,8 @@ def signout(request):
     if request.method == "GET":
         if request.session.get("user_id", None) != None:
             request.session.pop("user_id")
+        if request.session.get("user_type", None) != None:
+            request.session.pop("user_type")
         
         return redirect('/auth/signin')
     
