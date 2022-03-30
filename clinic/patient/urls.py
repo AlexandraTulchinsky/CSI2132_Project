@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
 
-    path('patientpage', views.viewAppt)
+    path('patientpage', views.viewPatient)
 
 
 ]
