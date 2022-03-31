@@ -2,15 +2,72 @@
 <html>
 <head>
     <title>PatientPage</title>  
+    <style>
+        .headerDiv{
+            background-image: linear-gradient(to bottom right, lightblue, rgb(238, 246, 255));
+            font-family: sans-serif;
+            color: rgb(27, 66, 77);
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+        }
+        .signOutButton{
+            height: 50px;
+            width: 100px;
+            border-radius: 6px;
+            font-size: 18px;
+            background-color: white;
+            color: rgb(22, 66, 77);
+            border: 2px solid rgb(147, 182, 194);
+            transition-duration: 0.2s;
+        }
+        .signOutButton:hover{
+            background-color: rgb(147, 182, 194);
+            color: white;
+        }
+        table, th, td{
+            border-collapse: collapse;
+            font-family: sans-serif;
+        }
+        th, td{
+            padding: 10px;
+            text-align: left;
+        }
+        th{
+            border: 2px solid white;
+            background-color: rgb(147, 182, 194);
+            color: white;
+        }
+        .apptable {
+            align-items: center;
+            margin-left: auto;
+            margin-right: auto;
+  
+        }
+        .apptable tr:nth-child(odd){
+            background-color: whitesmoke;
+        }
+
+        .buttonDiv{
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
     <form>
-        <h1 align="center" value = >Welcome Patient!</h1>
+        <div class="headerDiv">
+        <h2>Patient Portal</h3>
+            <h2>Welcome</h4>
+            <button class="signOutButton">Sign out</button>
    
-
+</div>
         <h4 align="center">Account Information</h4>
     <table align="center">
-        {{apptRows.PatientID}}
+    
 
         <tr>
           <td>First Name :</td>
@@ -55,12 +112,13 @@
       </table>
 
       <h1>Activites</h1>
+    
       <button class="btn btn-success" onclick=" window.open('http://127.0.0.1:8000/Receptionist/Add Patient')"> Submit an Insurance Claim</button>
       <button class="btn btn-success" onclick=" window.open('http://127.0.0.1:8000/Receptionist/Add Patient')"> Write a Review</button>
       
       <h2 style= "padding-left: 250px";>View upcoming appointments</h2>
         
-      <table style="margin-right: 20px;">
+      <table class="apptable">
           <tr>
               <th>Appointment ID</th>
               <th>Employee ID</th>
@@ -90,6 +148,29 @@
               {% endfor %}
           {% endif %}
       </table>
+
+      <h2 style= "padding-left: 250px";>View your Previous Records</h2>
+        
+      <table class="apptable">
+          <tr>
+              <th>Record ID</th>
+              <th>Treatment Length</th>
+              <th>Treatment Type</th>
+              <th>Date</th>
+              <th>Medical History</th>
+          </tr>
+          {% if recRows %}
+              {% for row in recRows %}
+                  <tr>
+                      <td>{{ row.RecordID }}</td>
+                      <td>{{ row.Treatment_length }}</td>
+                      <td>{{ row.Treatment_type }}</td>
+                      <td>{{ row.Date }}</td>
+                      <td>{{ row.MedicalHist }}</td>
+                  </tr>
+              {% endfor %}
+          {% endif %}
+      </table>
     
                         
       
@@ -98,31 +179,31 @@
       <table align= "center">
           <tr>
               <td>Seen by Dr. : </td>
-              <td><input type="text" id="dname" name="dname" disabled></td>   
+              <td><input value='{{ dentistRow.First_name }}' type="text" id="dname" name="dname" disabled></td>   
           </tr>
           <tr>
             <td>List of Procedures Done : </td>
-            <td><input type="text" id="proced" name="proced" disabled></td>
+            <td><input value = '{{ dentistRow.Procedure_type }}' type="text" id="proced" name="proced" disabled></td>
           </tr>
           <tr>
             <td>Bill ID : </td>
-            <td><input type="text" id="bill" name="bill" disabled></td>   
+            <td><input value = "001" type="text" id="bill" name="bill" disabled></td>   
         </tr>
         <tr>
             <td>Patient Amount: </td>
-            <td><input type="text" id="pamount" name="pamount" disabled></td>   
+            <td><input value = "$345.00" type="text" id="pamount" name="pamount" disabled></td>   
         </tr>
         <tr>
             <td>Insurance Amount: </td>
-            <td><input type="text" id="iamount" name="iamount" disabled></td>   
+            <td><input value = "$200.00" type="text" id="iamount" name="iamount" disabled></td>   
         </tr>
         <tr>
             <td>Insurance ID: </td>
-            <td><input type="text" id="iID" name="iID" disabled></td>   
+            <td><input value = "012938" type="text" id="iID" name="iID" disabled></td>   
         </tr>
         <tr>
             <td>Total Payment: </td>
-            <td><input type="text" id="totPay" name="totPay" disabled></td>   
+            <td><input value = "$100.00" type="text" id="totPay" name="totPay" disabled></td>   
         </tr>
         
       </table>
@@ -154,7 +235,7 @@
         </tr>
         <tr>
             <td>
-                    <button class="btn btn-success" onclick=" window.open('http://127.0.0.1:8000/Receptionist/Add Patient')"> Submit</button> 
+                    <button class="btn btn-success" onclick=" window.open('http://127.0.0.1:8000/patient/thankyou')"> Submit</button> 
                 
             </td>
         </tr>
