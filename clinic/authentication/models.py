@@ -17,3 +17,12 @@ def get_user_password(username):
         
     return row
     
+def get_all_user_data(user_id):
+    '''
+    Return a row of user data.
+    '''
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM "Users" WHERE "Users"."UserID" = %s', [user_id])
+        row = cursor.fetchone()
+        
+    return row

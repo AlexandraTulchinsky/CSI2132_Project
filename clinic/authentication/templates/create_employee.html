@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <title>Create an account</title>
+  <title>Create an employee account</title>
   <style>
     form {
       display: flex;
@@ -32,34 +32,13 @@
 
   <form method='post' action=''>
     {% csrf_token %}
-    <h1>Create an account</h1>
+    <h1>Create an employee account</h1>
     
-    <input type="text" id="email" name="email" placeholder="Email">
-    <input type="text" id="username" name="username" placeholder="Username">
-    <input type="password" id="password" name="password" placeholder="Password">
-
-    <p>User Type:</p>
-    <div id="user-type-button">
-      <div>
-        <input type="radio" value="Patient" name="type">
-        <label>Patient</label>
-      </div>
-
-      <div>
-        <input type="radio" value="Hygenist" name="type">
-        <label>Hygenist</label>
-      </div>
-
-      <div>
-        <input type="radio" value="Dentist" name="type">
-        <label>Dentist</label>
-      </div>
-
-      <div>
-        <input type="radio" value="Receptionist" name="type">
-        <label>Receptionist</label>
-      </div>
-    </div>
+    <input type="text" id="ssn" name="ssn" placeholder="SSN">
+    <input type="text" id="first_name" name="first_name" placeholder="First Name">
+    <input type="text" id="last_name" name="last_name" placeholder="Last Name">
+    <input type="text" id="salary" name="salary" placeholder="Salary">
+    <input type="text" id="Title" name="title" placeholder="Title">
 
     <button type="submit" name="submit">Submit!</button>
     <h4>{{ error }}</h4>
