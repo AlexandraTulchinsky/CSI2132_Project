@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title>Edit patient records</title>
+        <STYLE>
+            body {
+                 text-align: Center;
+                 font-size: Large;
+                 }
+            a {
+                text-align: Center;
+                vertical-align: bottom;
+                }
+         </STYLE>
+    </head>
+    <body>
+        <form method='post' action=''>
+            {% csrf_token %}
+         
+            <h1>Update Patient</h1>
+     
+            <label for="patID">Enter the Patient ID you want to update:</label>
+            <input type="text" id="patID" name="patID"><br><br>
+    
+            <label for="SSN">Enter the SSN:</label>
+            <input type="text" id="SSN" name="SSN"><br><br>
+            
+            <label for="houseNo">Enter the house number:</label>
+            <input type="text" id="houseNo" name="houseNo"><br><br>
+            
+            <label for="street">Enter the street:</label>
+            <input type="text" id="street" name="street"><br><br>
+            
+            <label for="city">Enter the city:</label>
+            <input type="text" id="city" name="city"><br><br>
+            
+            <label for="province">Enter the province:</label>
+            <input type="text" id="province" name="province"><br><br>
+            
+            <label for="fName">Enter the first name:</label>
+            <input type="text" id="fName" name="fName"><br><br>
+            
+            <label for="lName">Enter the last name:</label>
+            <input type="text" id="lName" name="lName"><br><br>
+            
+            <label for="gender">Enter the gender:</label>
+            <input type="text" id="gender" name="gender"><br><br>
+            
+            <label for="email">Enter the email:</label>
+            <input type="text" id="email" name="email"><br><br>
+
+            <label for="dob">Enter the date of birth (yyyy-mm-dd):</label>
+            <input type="text" id="dob" name="dob"><br><br>
+
+            <label for="phone">Enter the phone number:</label>
+            <input type="text" id="phone" name="phone"><br><br>
+            
+            
+            <button type="submit" name="submit">Submit</button>
+            
+        </form>
+        <a href="http://127.0.0.1:8000/Receptionist/menu"><button>Back</button></a>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+   
+    </body>
+</html>
