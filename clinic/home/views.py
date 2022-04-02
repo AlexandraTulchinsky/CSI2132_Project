@@ -16,12 +16,8 @@ def home(request):
         cursor.execute('SELECT * FROM "Users" WHERE "User_type" = \'Dentist\' OR "User_type" = \'Hygenist\' OR "User_type" = \'Hygienist\'')
         dentistRows = dictfetchone(cursor)
 
-        # replace later
         cursor.execute('SELECT * FROM "Branch"')
         branchRows = dictfetchone(cursor)
-
-        # for i in branchRows:
-
 
     context = {'dentistRows': dentistRows, 'branchRows': branchRows}
     return render(request, 'home.html', context)
