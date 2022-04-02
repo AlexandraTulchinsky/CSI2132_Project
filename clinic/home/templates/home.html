@@ -67,6 +67,9 @@
             <th>Name</th>
             <th>Occupation</th>
             <th>Email</th>
+            <th>Branch number</th>
+            <th colspan="5">Address</th>
+
         </tr>
         {% if dentistRows %}
             {% for row in dentistRows %}
@@ -74,6 +77,16 @@
                     <td>{{ row.Username }}</td>
                     <td>{{ row.User_type }}</td>
                     <td>{{ row.Email }}</td>
+                    <td>{{ row.City }}</td>
+                    {% for row2 in branchRows %}
+                        {% if row.City == row2.City %}
+                            <td>{{ row2.Build_no }}</td>
+                            <td>{{ row2.Street }}</td>
+                            <td>{{ row2.Province }}</td>
+                            <td>{{ row2.Country }}</td>
+                            <td>{{ row2.Postal_code }}</td>
+                        {% endif %}
+                    {% endfor %}
                 </tr>
             {% endfor %}
         {% endif %}
