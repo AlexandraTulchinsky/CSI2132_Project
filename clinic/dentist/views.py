@@ -25,6 +25,14 @@ def viewProcedures(request):
                
     return render(request, 'viewProcedures.html', context)
 
+def viewRecords(request):
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM "Record"')
+        recordRows = dictfetchone(cursor)
+
+    context = {'recordRows': recordRows}
+    return render(request, 'viewRecords.html', context)
+
 def dictfetchone(cursor):
     columns = [col[0] for col in cursor.description]
     return [
