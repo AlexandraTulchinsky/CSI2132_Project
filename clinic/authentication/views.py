@@ -43,6 +43,12 @@ def signup(request):
                 if request.session["user_type"] == "Receptionist":
                     return redirect('/Receptionist/menu')
                 
+                elif request.session["user_type"] == "Dentist":
+                    return redirect('/dentist')
+                
+                elif request.session["user_type"] == "Dentist":
+                    return redirect('/patient/patientpage')
+                
                 return redirect('/')
         
     
@@ -72,6 +78,12 @@ def signin(request):
                 
                 if request.session["user_type"] == "Receptionist":
                     return redirect('/Receptionist/menu')
+                
+                elif request.session["user_type"] == "Dentist":
+                    return redirect('/dentist')
+                
+                elif request.session["user_type"] == "Dentist":
+                    return redirect('/patient/patientpage')
                 
                 return redirect('/')
             else:
