@@ -39,6 +39,10 @@ def signup(request):
             if user_info[2] != "Patient":
                 return redirect('/auth/createemployee')
             else:
+                
+                if request.session["user_type"] == "Receptionist":
+                    return redirect('/Receptionist/menu')
+                
                 return redirect('/')
         
     
@@ -65,6 +69,9 @@ def signin(request):
             if check_password(request.POST["password"], user_info[0]):
                 request.session["user_id"] = user_info[1]
                 request.session["user_type"] = user_info[2]
+                
+                if request.session["user_type"] == "Receptionist":
+                    return redirect('/Receptionist/menu')
                 
                 return redirect('/')
             else:
