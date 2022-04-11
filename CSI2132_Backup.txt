@@ -1,0 +1,1453 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13.6 (Ubuntu 13.6-1.pgdg20.04+1)
+-- Dumped by pg_dump version 14.1
+
+-- Started on 2022-04-08 16:10:21
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 226 (class 1259 OID 18573092)
+-- Name: Appointment; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Appointment" (
+    "EID" integer NOT NULL,
+    "PatientID" integer NOT NULL,
+    "TreatmentID" integer NOT NULL,
+    "Date" date NOT NULL,
+    "Room" integer NOT NULL,
+    "Start_time" time without time zone NOT NULL,
+    "End_time" time without time zone NOT NULL,
+    "Procedure_type" character varying(100) NOT NULL,
+    "Status" character varying(100) NOT NULL,
+    "AppointmentID" integer NOT NULL
+);
+
+
+ALTER TABLE public."Appointment" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 230 (class 1259 OID 18900664)
+-- Name: Billing; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Billing" (
+    "BillID" integer NOT NULL,
+    "AppointmentID" integer NOT NULL,
+    "PatientID" integer NOT NULL,
+    "ClaimID" integer NOT NULL,
+    "Insurance_charge" double precision NOT NULL,
+    "Patient_charge" double precision NOT NULL,
+    "Total_charge" double precision NOT NULL,
+    "Payment_type" character varying(25) NOT NULL
+);
+
+
+ALTER TABLE public."Billing" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 202 (class 1259 OID 1574364)
+-- Name: Branch; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Branch" (
+    "Phone_no" numeric NOT NULL,
+    "Build_no" numeric NOT NULL,
+    "Street" character varying(25) NOT NULL,
+    "Province" character varying(25) NOT NULL,
+    "Country" character varying(25) NOT NULL,
+    "Postal_code" character varying NOT NULL,
+    "EID" integer NOT NULL,
+    "City" integer NOT NULL
+);
+
+
+ALTER TABLE public."Branch" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 200 (class 1259 OID 1277360)
+-- Name: Users; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Users" (
+    "UserID" integer NOT NULL,
+    "Email" character varying(40) NOT NULL,
+    "Username" character varying(25) NOT NULL,
+    "Password" character varying(200) NOT NULL,
+    "Last_login_time" numeric,
+    "User_type" character varying(25) NOT NULL,
+    "City" integer
+);
+
+
+ALTER TABLE public."Users" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 227 (class 1259 OID 18700099)
+-- Name: userid_serial; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.userid_serial
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.userid_serial OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4215 (class 0 OID 0)
+-- Dependencies: 227
+-- Name: userid_serial; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.userid_serial OWNED BY public."Users"."UserID";
+
+
+--
+-- TOC entry 201 (class 1259 OID 1408876)
+-- Name: Employee; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Employee" (
+    "UserID" integer DEFAULT nextval('public.userid_serial'::regclass) NOT NULL,
+    "Email" character varying(40) NOT NULL,
+    "Username" character varying(25) NOT NULL,
+    "Password" character varying(200) NOT NULL,
+    "Last_login_time" numeric,
+    "User_type" character varying(25) NOT NULL,
+    "EID" integer NOT NULL,
+    "SSN" integer NOT NULL,
+    "First_name" character varying(25) NOT NULL,
+    "Last_name" character varying(25) NOT NULL,
+    "Employee_type" character varying(25) NOT NULL,
+    "Salary" numeric NOT NULL,
+    "Title" character varying(25) NOT NULL
+);
+
+
+ALTER TABLE public."Employee" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 233 (class 1259 OID 18900722)
+-- Name: Fee; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Fee" (
+    "FeeID" integer NOT NULL,
+    "ProcedureID" integer NOT NULL,
+    "Fee_code" integer NOT NULL,
+    "Charge" double precision NOT NULL
+);
+
+
+ALTER TABLE public."Fee" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 204 (class 1259 OID 1574385)
+-- Name: Insurance_claim; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Insurance_claim" (
+    "ClaimID" integer NOT NULL,
+    "PatientID" integer NOT NULL,
+    "Claim_amount" numeric NOT NULL
+);
+
+
+ALTER TABLE public."Insurance_claim" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 231 (class 1259 OID 18900682)
+-- Name: Invoice; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Invoice" (
+    "InvoiceID" integer NOT NULL,
+    "AppointmentID" integer NOT NULL,
+    "PatientID" integer NOT NULL,
+    "Contact_info" character varying(40) NOT NULL,
+    "Issue_date" date NOT NULL,
+    "ClaimID" integer NOT NULL,
+    "Insurance_charge" double precision NOT NULL,
+    "Discount" double precision NOT NULL,
+    "Penalty" double precision NOT NULL,
+    "Total_charge" double precision NOT NULL
+);
+
+
+ALTER TABLE public."Invoice" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 203 (class 1259 OID 1574377)
+-- Name: Patient; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Patient" (
+    "PatientID" integer NOT NULL,
+    "SSN_patient" integer NOT NULL,
+    "House_no" integer NOT NULL,
+    "Street" character varying(40) NOT NULL,
+    "City_name" character varying(25) NOT NULL,
+    "Province" character varying(25) NOT NULL,
+    "First_name" character varying(25) NOT NULL,
+    "Last_name" character varying(25) NOT NULL,
+    "Gender" character varying(25) NOT NULL,
+    "Email_patient" character varying(40) NOT NULL,
+    "Dob" date NOT NULL,
+    "Phone_no_patient" numeric NOT NULL
+);
+
+
+ALTER TABLE public."Patient" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 232 (class 1259 OID 18900702)
+-- Name: Procedure; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Procedure" (
+    "ProcedureID" integer NOT NULL,
+    "AppointmentID" integer NOT NULL,
+    "PatientID" integer NOT NULL,
+    "InvoiceID" integer NOT NULL,
+    "Procedure_code" integer NOT NULL,
+    "Procedure_type" character varying(25) NOT NULL,
+    "Procedure_amount" double precision NOT NULL,
+    "Tooth_description" character varying(120) NOT NULL,
+    "Patient_charge" double precision NOT NULL,
+    "Insurance_charge" double precision NOT NULL
+);
+
+
+ALTER TABLE public."Procedure" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 228 (class 1259 OID 18900426)
+-- Name: Record; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Record" (
+    "RecordID" integer NOT NULL,
+    "PatientID" integer NOT NULL,
+    "Treatment_length" interval NOT NULL,
+    "Treatment_type" character varying(100) NOT NULL,
+    "Patient_status" character varying(100) NOT NULL,
+    "Date" date NOT NULL,
+    "MedicalHist" character varying(100)
+);
+
+
+ALTER TABLE public."Record" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 229 (class 1259 OID 18900645)
+-- Name: Responsible Party; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Responsible Party" (
+    "UserID" integer DEFAULT nextval('public.userid_serial'::regclass),
+    "RespPartyID" integer NOT NULL,
+    "PatientID" integer NOT NULL,
+    "First_name" character varying NOT NULL,
+    "Last_name" character varying NOT NULL,
+    "Province" character varying NOT NULL,
+    "Phone_no" character varying NOT NULL,
+    "City" integer
+)
+INHERITS (public."Users");
+
+
+ALTER TABLE public."Responsible Party" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 205 (class 1259 OID 1574398)
+-- Name: Review; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Review" (
+    "ReviewID" integer NOT NULL,
+    "PatientID" integer NOT NULL,
+    "Professionalism" character varying(200) NOT NULL,
+    "Communication" character varying(200) NOT NULL,
+    "Cleanliness" character varying(200) NOT NULL,
+    "Value" character varying(200) NOT NULL
+);
+
+
+ALTER TABLE public."Review" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 225 (class 1259 OID 18573084)
+-- Name: Treatment; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public."Treatment" (
+    "TreatmentID" integer NOT NULL,
+    "Treatment_type" character varying(100) NOT NULL,
+    "Appointment_type" character varying(100) NOT NULL,
+    "Medication" character varying(100) NOT NULL,
+    "Symptoms" character varying(100) NOT NULL,
+    "Tooth" character varying(100) NOT NULL,
+    "Description" character varying(200) NOT NULL
+);
+
+
+ALTER TABLE public."Treatment" OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 213 (class 1259 OID 18448439)
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE public.auth_group OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 212 (class 1259 OID 18448437)
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.auth_group_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4216 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
+
+
+--
+-- TOC entry 215 (class 1259 OID 18448449)
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.auth_group_permissions (
+    id bigint NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_group_permissions OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 214 (class 1259 OID 18448447)
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.auth_group_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_permissions_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4217 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
+
+
+--
+-- TOC entry 211 (class 1259 OID 18448431)
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.auth_permission OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 210 (class 1259 OID 18448429)
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.auth_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_permission_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4218 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 18448457)
+-- Name: auth_user; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.auth_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(150) NOT NULL,
+    last_name character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.auth_user OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 219 (class 1259 OID 18448467)
+-- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.auth_user_groups (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_groups OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 218 (class 1259 OID 18448465)
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.auth_user_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_groups_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4219 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.auth_user_groups_id_seq OWNED BY public.auth_user_groups.id;
+
+
+--
+-- TOC entry 216 (class 1259 OID 18448455)
+-- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.auth_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4220 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: auth_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.auth_user_id_seq OWNED BY public.auth_user.id;
+
+
+--
+-- TOC entry 221 (class 1259 OID 18448475)
+-- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.auth_user_user_permissions (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_user_permissions OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 220 (class 1259 OID 18448473)
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.auth_user_user_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_user_permissions_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4221 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_user_user_permissions.id;
+
+
+--
+-- TOC entry 223 (class 1259 OID 18448535)
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE public.django_admin_log OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 222 (class 1259 OID 18448533)
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.django_admin_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_admin_log_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4222 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
+
+
+--
+-- TOC entry 209 (class 1259 OID 18448421)
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.django_content_type OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 208 (class 1259 OID 18448419)
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.django_content_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_content_type_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4223 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
+
+
+--
+-- TOC entry 207 (class 1259 OID 18448410)
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.django_migrations (
+    id bigint NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_migrations OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 206 (class 1259 OID 18448408)
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE SEQUENCE public.django_migrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_migrations_id_seq OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 4224 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
+
+
+--
+-- TOC entry 224 (class 1259 OID 18448566)
+-- Name: django_session; Type: TABLE; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_session OWNER TO zjgznqwgbdvrgm;
+
+--
+-- TOC entry 3959 (class 2604 OID 18700101)
+-- Name: Users UserID; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Users" ALTER COLUMN "UserID" SET DEFAULT nextval('public.userid_serial'::regclass);
+
+
+--
+-- TOC entry 3964 (class 2604 OID 18448442)
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
+
+
+--
+-- TOC entry 3965 (class 2604 OID 18448452)
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 3963 (class 2604 OID 18448434)
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
+
+
+--
+-- TOC entry 3966 (class 2604 OID 18448460)
+-- Name: auth_user id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user ALTER COLUMN id SET DEFAULT nextval('public.auth_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 3967 (class 2604 OID 18448470)
+-- Name: auth_user_groups id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_groups ALTER COLUMN id SET DEFAULT nextval('public.auth_user_groups_id_seq'::regclass);
+
+
+--
+-- TOC entry 3968 (class 2604 OID 18448478)
+-- Name: auth_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_user_user_permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 3969 (class 2604 OID 18448538)
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
+
+
+--
+-- TOC entry 3962 (class 2604 OID 18448424)
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
+
+
+--
+-- TOC entry 3961 (class 2604 OID 18448413)
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- TOC entry 4036 (class 2606 OID 18900502)
+-- Name: Appointment Appointment_AppointmentID_key; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Appointment"
+    ADD CONSTRAINT "Appointment_AppointmentID_key" UNIQUE ("AppointmentID");
+
+
+--
+-- TOC entry 4038 (class 2606 OID 18908371)
+-- Name: Appointment Appointment_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Appointment"
+    ADD CONSTRAINT "Appointment_pkey" PRIMARY KEY ("AppointmentID");
+
+
+--
+-- TOC entry 4044 (class 2606 OID 18969660)
+-- Name: Billing Billing_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Billing"
+    ADD CONSTRAINT "Billing_pkey" PRIMARY KEY ("BillID");
+
+
+--
+-- TOC entry 3979 (class 2606 OID 1574371)
+-- Name: Branch Branch_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Branch"
+    ADD CONSTRAINT "Branch_pkey" PRIMARY KEY ("City");
+
+
+--
+-- TOC entry 3977 (class 2606 OID 1408883)
+-- Name: Employee Employee_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Employee"
+    ADD CONSTRAINT "Employee_pkey" PRIMARY KEY ("EID");
+
+
+--
+-- TOC entry 3983 (class 2606 OID 1574392)
+-- Name: Insurance_claim Insurance_claim_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Insurance_claim"
+    ADD CONSTRAINT "Insurance_claim_pkey" PRIMARY KEY ("ClaimID");
+
+
+--
+-- TOC entry 4046 (class 2606 OID 18900686)
+-- Name: Invoice Invoice_InvoiceID_key; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Invoice"
+    ADD CONSTRAINT "Invoice_InvoiceID_key" UNIQUE ("InvoiceID");
+
+
+--
+-- TOC entry 3981 (class 2606 OID 1574384)
+-- Name: Patient Patient_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Patient"
+    ADD CONSTRAINT "Patient_pkey" PRIMARY KEY ("PatientID");
+
+
+--
+-- TOC entry 4048 (class 2606 OID 18900706)
+-- Name: Procedure ProcedureID_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Procedure"
+    ADD CONSTRAINT "ProcedureID_pkey" PRIMARY KEY ("ProcedureID");
+
+
+--
+-- TOC entry 4040 (class 2606 OID 18965310)
+-- Name: Record Record_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Record"
+    ADD CONSTRAINT "Record_pkey" PRIMARY KEY ("RecordID");
+
+
+--
+-- TOC entry 4042 (class 2606 OID 18900653)
+-- Name: Responsible Party Responsible Party_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Responsible Party"
+    ADD CONSTRAINT "Responsible Party_pkey" PRIMARY KEY ("RespPartyID");
+
+
+--
+-- TOC entry 3985 (class 2606 OID 1574405)
+-- Name: Review Review_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Review"
+    ADD CONSTRAINT "Review_pkey" PRIMARY KEY ("ReviewID");
+
+
+--
+-- TOC entry 4034 (class 2606 OID 18573091)
+-- Name: Treatment TreatmentID_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Treatment"
+    ADD CONSTRAINT "TreatmentID_pkey" PRIMARY KEY ("TreatmentID");
+
+
+--
+-- TOC entry 3973 (class 2606 OID 1277367)
+-- Name: Users User_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "User_pkey" PRIMARY KEY ("UserID");
+
+
+--
+-- TOC entry 3975 (class 2606 OID 18700131)
+-- Name: Users Users_Username_Email_key; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "Users_Username_Email_key" UNIQUE ("Username", "Email");
+
+
+--
+-- TOC entry 3999 (class 2606 OID 18448564)
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- TOC entry 4004 (class 2606 OID 18448491)
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- TOC entry 4007 (class 2606 OID 18448454)
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4001 (class 2606 OID 18448444)
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3994 (class 2606 OID 18448482)
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- TOC entry 3996 (class 2606 OID 18448436)
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4015 (class 2606 OID 18448472)
+-- Name: auth_user_groups auth_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4018 (class 2606 OID 18448506)
+-- Name: auth_user_groups auth_user_groups_user_id_group_id_94350c0c_uniq; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_group_id_94350c0c_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- TOC entry 4009 (class 2606 OID 18448462)
+-- Name: auth_user auth_user_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4021 (class 2606 OID 18448480)
+-- Name: auth_user_user_permissions auth_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4024 (class 2606 OID 18448520)
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_permission_id_14a6b632_uniq; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_permission_id_14a6b632_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- TOC entry 4012 (class 2606 OID 18448558)
+-- Name: auth_user auth_user_username_key; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_username_key UNIQUE (username);
+
+
+--
+-- TOC entry 4027 (class 2606 OID 18448544)
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3989 (class 2606 OID 18448428)
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- TOC entry 3991 (class 2606 OID 18448426)
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3987 (class 2606 OID 18448418)
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 4031 (class 2606 OID 18448573)
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- TOC entry 3997 (class 1259 OID 18448565)
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- TOC entry 4002 (class 1259 OID 18448502)
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
+
+
+--
+-- TOC entry 4005 (class 1259 OID 18448503)
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
+
+
+--
+-- TOC entry 3992 (class 1259 OID 18448488)
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- TOC entry 4013 (class 1259 OID 18448518)
+-- Name: auth_user_groups_group_id_97559544; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_user_groups_group_id_97559544 ON public.auth_user_groups USING btree (group_id);
+
+
+--
+-- TOC entry 4016 (class 1259 OID 18448517)
+-- Name: auth_user_groups_user_id_6a12ed8b; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_user_groups_user_id_6a12ed8b ON public.auth_user_groups USING btree (user_id);
+
+
+--
+-- TOC entry 4019 (class 1259 OID 18448532)
+-- Name: auth_user_user_permissions_permission_id_1fbb5f2c; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON public.auth_user_user_permissions USING btree (permission_id);
+
+
+--
+-- TOC entry 4022 (class 1259 OID 18448531)
+-- Name: auth_user_user_permissions_user_id_a95ead1b; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_user_permissions USING btree (user_id);
+
+
+--
+-- TOC entry 4010 (class 1259 OID 18448559)
+-- Name: auth_user_username_6821ab7c_like; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- TOC entry 4025 (class 1259 OID 18448555)
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
+
+
+--
+-- TOC entry 4028 (class 1259 OID 18448556)
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- TOC entry 4029 (class 1259 OID 18448575)
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
+
+
+--
+-- TOC entry 4032 (class 1259 OID 18448574)
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- TOC entry 4074 (class 2606 OID 18900707)
+-- Name: Procedure AppointmentID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Procedure"
+    ADD CONSTRAINT "AppointmentID_fkey" FOREIGN KEY ("AppointmentID") REFERENCES public."Appointment"("AppointmentID");
+
+
+--
+-- TOC entry 4068 (class 2606 OID 18900667)
+-- Name: Billing Billing_AppointmentID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Billing"
+    ADD CONSTRAINT "Billing_AppointmentID_fkey" FOREIGN KEY ("AppointmentID") REFERENCES public."Appointment"("AppointmentID");
+
+
+--
+-- TOC entry 4069 (class 2606 OID 18900677)
+-- Name: Billing Billing_ClaimID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Billing"
+    ADD CONSTRAINT "Billing_ClaimID_fkey" FOREIGN KEY ("ClaimID") REFERENCES public."Insurance_claim"("ClaimID");
+
+
+--
+-- TOC entry 4070 (class 2606 OID 18900672)
+-- Name: Billing Billing_PatientID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Billing"
+    ADD CONSTRAINT "Billing_PatientID_fkey" FOREIGN KEY ("PatientID") REFERENCES public."Patient"("PatientID");
+
+
+--
+-- TOC entry 4050 (class 2606 OID 1574372)
+-- Name: Branch Branch_EID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Branch"
+    ADD CONSTRAINT "Branch_EID_fkey" FOREIGN KEY ("EID") REFERENCES public."Employee"("EID");
+
+
+--
+-- TOC entry 4062 (class 2606 OID 18573095)
+-- Name: Appointment EID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Appointment"
+    ADD CONSTRAINT "EID_fkey" FOREIGN KEY ("EID") REFERENCES public."Employee"("EID");
+
+
+--
+-- TOC entry 4051 (class 2606 OID 1574393)
+-- Name: Insurance_claim Insurance_Claim_PatientID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Insurance_claim"
+    ADD CONSTRAINT "Insurance_Claim_PatientID_fkey" FOREIGN KEY ("PatientID") REFERENCES public."Patient"("PatientID");
+
+
+--
+-- TOC entry 4075 (class 2606 OID 18900717)
+-- Name: Procedure InvoiceID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Procedure"
+    ADD CONSTRAINT "InvoiceID_fkey" FOREIGN KEY ("InvoiceID") REFERENCES public."Invoice"("InvoiceID");
+
+
+--
+-- TOC entry 4071 (class 2606 OID 18900687)
+-- Name: Invoice Invoice_AppointmentID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Invoice"
+    ADD CONSTRAINT "Invoice_AppointmentID_fkey" FOREIGN KEY ("AppointmentID") REFERENCES public."Appointment"("AppointmentID");
+
+
+--
+-- TOC entry 4072 (class 2606 OID 18900692)
+-- Name: Invoice Invoice_PatientID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Invoice"
+    ADD CONSTRAINT "Invoice_PatientID_fkey" FOREIGN KEY ("PatientID") REFERENCES public."Patient"("PatientID");
+
+
+--
+-- TOC entry 4073 (class 2606 OID 18900697)
+-- Name: Invoice Invoice_claimID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Invoice"
+    ADD CONSTRAINT "Invoice_claimID_fkey" FOREIGN KEY ("ClaimID") REFERENCES public."Insurance_claim"("ClaimID");
+
+
+--
+-- TOC entry 4063 (class 2606 OID 18573100)
+-- Name: Appointment PatientID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Appointment"
+    ADD CONSTRAINT "PatientID_fkey" FOREIGN KEY ("PatientID") REFERENCES public."Patient"("PatientID");
+
+
+--
+-- TOC entry 4076 (class 2606 OID 18900712)
+-- Name: Procedure PatientID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Procedure"
+    ADD CONSTRAINT "PatientID_fkey" FOREIGN KEY ("PatientID") REFERENCES public."Patient"("PatientID");
+
+
+--
+-- TOC entry 4077 (class 2606 OID 18900725)
+-- Name: Fee Procedure_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Fee"
+    ADD CONSTRAINT "Procedure_fkey" FOREIGN KEY ("ProcedureID") REFERENCES public."Procedure"("ProcedureID");
+
+
+--
+-- TOC entry 4065 (class 2606 OID 18900429)
+-- Name: Record Record_PatientID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Record"
+    ADD CONSTRAINT "Record_PatientID_fkey" FOREIGN KEY ("PatientID") REFERENCES public."Patient"("PatientID");
+
+
+--
+-- TOC entry 4066 (class 2606 OID 18900659)
+-- Name: Responsible Party Responsible Party_PatientID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Responsible Party"
+    ADD CONSTRAINT "Responsible Party_PatientID_fkey" FOREIGN KEY ("PatientID") REFERENCES public."Patient"("PatientID");
+
+
+--
+-- TOC entry 4067 (class 2606 OID 18900654)
+-- Name: Responsible Party Responsible Party_UserID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Responsible Party"
+    ADD CONSTRAINT "Responsible Party_UserID_fkey" FOREIGN KEY ("UserID") REFERENCES public."Users"("UserID");
+
+
+--
+-- TOC entry 4052 (class 2606 OID 1574406)
+-- Name: Review Review_PatientID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Review"
+    ADD CONSTRAINT "Review_PatientID_fkey" FOREIGN KEY ("PatientID") REFERENCES public."Patient"("PatientID");
+
+
+--
+-- TOC entry 4064 (class 2606 OID 18573105)
+-- Name: Appointment TreatmentID_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Appointment"
+    ADD CONSTRAINT "TreatmentID_fkey" FOREIGN KEY ("TreatmentID") REFERENCES public."Treatment"("TreatmentID");
+
+
+--
+-- TOC entry 4049 (class 2606 OID 18992895)
+-- Name: Users User_City_fkey; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public."Users"
+    ADD CONSTRAINT "User_City_fkey" FOREIGN KEY ("City") REFERENCES public."Branch"("City");
+
+
+--
+-- TOC entry 4054 (class 2606 OID 18448497)
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4055 (class 2606 OID 18448492)
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4053 (class 2606 OID 18448483)
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4056 (class 2606 OID 18448512)
+-- Name: auth_user_groups auth_user_groups_group_id_97559544_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_group_id_97559544_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4057 (class 2606 OID 18448507)
+-- Name: auth_user_groups auth_user_groups_user_id_6a12ed8b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_6a12ed8b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4058 (class 2606 OID 18448526)
+-- Name: auth_user_user_permissions auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4059 (class 2606 OID 18448521)
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4060 (class 2606 OID 18448545)
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4061 (class 2606 OID 18448550)
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: zjgznqwgbdvrgm
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 4213 (class 0 OID 0)
+-- Dependencies: 5
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: zjgznqwgbdvrgm
+--
+
+REVOKE ALL ON SCHEMA public FROM postgres;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO zjgznqwgbdvrgm;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- TOC entry 4214 (class 0 OID 0)
+-- Dependencies: 750
+-- Name: LANGUAGE plpgsql; Type: ACL; Schema: -; Owner: postgres
+--
+
+GRANT ALL ON LANGUAGE plpgsql TO zjgznqwgbdvrgm;
+
+
+-- Completed on 2022-04-08 16:10:29
+
+--
+-- PostgreSQL database dump complete
+--
+
